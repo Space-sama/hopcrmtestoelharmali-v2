@@ -103,6 +103,22 @@
         });
     @endif
 
+    // Double of org & contact in the same form
+    @if(Session::has('failed_on_creation_contact_org'))
+        Swal.fire({
+        title: 'Doublon !',
+        html: '<h5>Une entreprise existe déjà avec le même nom ! Le Nom ou le Prénom du contact déjà existe !</h5>',
+        showDenyButton: true,
+        showCancelButton: false,
+        showConfirmButton: false,
+        denyButtonText: `Retourner`,
+        }).then((result) => {
+        if (result.isDenied) {
+            location.href = "/add_contact";
+        }
+        });
+    @endif
+
     @if($errors->any())
         @foreach($errors->all() as $err)
             Swal.fire({

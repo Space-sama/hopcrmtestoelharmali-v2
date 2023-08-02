@@ -192,6 +192,23 @@ class ContactController extends Controller
             Session::put('correction', 'Veuillez entrez un nom et un prènom unique.');
             return redirect('/')->with('failed_on_creation_contact', 'Un contact existe déjà avec le même prénom et le même nom / org');
         }
+        // case : if both of contact & org exists in DB.
+        if($if_exist_fname && $if_exist_organiastion){
+            // Push new sessions
+            Session::put('nom', $data['nom']);
+            Session::put('prenom', $data['prenom']);
+            Session::put('email', $data['email']);
+            Session::put('telephone_fixe', $data['telephone_fixe']);
+            Session::put('fonction', $data['fonction']);
+            Session::put('service', $data['service']);
+            Session::put('org_name', $data['org_name']);
+            Session::put('adresse', $data['adresse']);
+            Session::put('code_postal', $data['code_postal']);
+            Session::put('ville', $data['ville']);
+            Session::put('statut', $data['statut']);
+            Session::put('correction', 'Le nom / prénom du contact déjà existe | Une entreprise existe déjà avec le même nom !');
+            return redirect('/')->with('failed_on_creation_contact_org', 'Le nom / prénom du contact déjà existe | Une entreprise existe déjà avec le même nom !');
+        }
 
     }
 
@@ -207,7 +224,7 @@ class ContactController extends Controller
         $request->validate([
             'nom' => 'required|min:4',
             'prenom' => 'required|min:4',
-            'email' => 'email:rfc,dns',
+            'email' => 'required|email',
             'telephone_fixe' => 'required|regex:/[0-9]{9}/',
             'fonction' => 'required|min:4',
             'service' => 'required|min:4',
@@ -221,6 +238,7 @@ class ContactController extends Controller
             'prenom.min' => 'Le champ Prénom doit avoir quatre caractères au minimum !',
 
             'email.email' => 'Veuillez saisir un valide E-mail !',
+            'email.required' => 'Le champ E-mail est obligatoire !',
 
             'telephone_fixe.required' => 'Le champ Téléphone est obligatoire !',
             'telephone_fixe.regex' => 'Veuillez saisissez un numéro valide !',
