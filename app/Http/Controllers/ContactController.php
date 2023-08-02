@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\contact;
-use App\Models\organisation;
+use App\Models\Contact;
+use App\Models\Organisation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Session;
@@ -12,14 +12,14 @@ use Illuminate\Support\Facades\Session;
 class ContactController extends Controller
 {
     public function index() {
-        $orgs = organisation::all();
-        $contacts = contact::with('organisation')->get();
+        $orgs = Organisation::all();
+        $contacts = Contact::with('organisation')->get();
         return view('home', compact('contacts', 'orgs'));
     }
 
     // get Contact creation page
     public function createOneContact() {
-        $orgs = organisation::all();
+        $orgs = Organisation::all();
         return view('contacts.create', compact('orgs'));
     }
 
@@ -27,7 +27,7 @@ class ContactController extends Controller
     public function createOnConfirm($nom, $prenom, $email, $telephone_fixe, $fonction, $service, $org_name, $adresse, $code_postal, $ville, $statut){
         $randomString_contact = Str::random(30);
         $randomString_org = Str::random(30);
-        $orgToCreate = organisation::create(array_merge(
+        $orgToCreate = Organisation::create(array_merge(
         [
             'nom' => $org_name,
             'adresse' => $adresse,
@@ -36,7 +36,7 @@ class ContactController extends Controller
             'cle' => $randomString_org,
             'statut' => $statut,
         ]));
-        $contactToCreate = contact::create(array_merge(
+        $contactToCreate = Contact::create(array_merge(
         [
             'nom' => $nom,
             'prenom' => $prenom,
@@ -116,9 +116,9 @@ class ContactController extends Controller
         ],
     );
         $data = $request->all();
-        $if_exist_fname = contact::where('nom', $data['nom'])
+        $if_exist_fname = Contact::where('nom', $data['nom'])
         ->where('prenom', $data['prenom'])->first();
-        $if_exist_organiastion = organisation::where('nom', $data['org_name'])->first();
+        $if_exist_organiastion = Organisation::where('nom', $data['org_name'])->first();
         // dd($if_exist_organiastion);
         // dd($if_exist_fname);
         if(!$if_exist_fname && !$if_exist_organiastion){
@@ -137,7 +137,7 @@ class ContactController extends Controller
             Session::forget('correction');
             $randomString_contact = Str::random(30);
             $randomString_org = Str::random(30);
-            $org = organisation::create(array_merge([
+            $org = Organisation::create(array_merge([
                 'cle' => $randomString_org,
                 'nom' => $data['org_name'],
                 'adresse' => $data['adresse'],
@@ -145,7 +145,7 @@ class ContactController extends Controller
                 'ville' => $data['ville'],
                 'statut' => $data['statut'],
             ]));
-            contact::create(array_merge([
+            Contact::create(array_merge([
                 'cle' => $randomString_contact,
                 'nom' => $data['nom'],
                 'prenom' => $data['prenom'],
@@ -197,7 +197,7 @@ class ContactController extends Controller
 
     // Rendering to the contact edit page
     public function editContact($contact) {
-        $orgs = organisation::all();
+        $orgs = Organisation::all();
         $contactToEdit = contact::find($contact);
         return view('contacts.edit', compact('contactToEdit', 'orgs'));
     }
@@ -233,7 +233,7 @@ class ContactController extends Controller
         ],
     );
         $data = $request->all();
-        $contact = contact::find($contact);
+        $contact = Contact::find($contact);
         $contact->nom = $data['nom'];
         $contact->prenom = $data['prenom'];
         $contact->email = $data['email'];
@@ -252,8 +252,8 @@ class ContactController extends Controller
 
     // Get infos of desired contact to edit on the pop up
     public function edit_data($contact, $org) {
-        $contactToFind = contact::find($contact);
-        $orga = organisation::find($org);
+        $contactToFind = Contact::find($contact);
+        $orga = Organisation::find($org);
 
         return response()->json([
             'status'=> 200,
@@ -264,8 +264,8 @@ class ContactController extends Controller
 
     // Edit one contact with his organisation
     public function editDataModal(Request $request, $contact, $org) {
-        $contactToFind = contact::find($contact);
-        $orga = organisation::find($org);
+        $contactToFind = Contact::find($contact);
+        $orga = Organisation::find($org);
         $data = $request->all();
         $contactToFind->nom = $data['nom'];
         $contactToFind->prenom = $data['prenom'];
@@ -289,14 +289,14 @@ class ContactController extends Controller
 
     // Display all data of contacts
     public function showContact($contact) {
-        $orgs = organisation::all();
+        $orgs = Organisation::all();
         $contactToShow = contact::find($contact);
         return view('welcome', compact('contactToShow', 'orgs'));
     }
 
     // Delete one contact
     public function deleteContact($contact){
-        $contactToDelete = contact::find($contact)->delete();
+        $contactToDelete = Contact::find($contact)->delete();
         // dd($contactToDelete);
         if(!$contactToDelete){
             return back()->with('not_deleted', 'Un problème est survenu lors du traitement, merci de ressayez plus tard');
