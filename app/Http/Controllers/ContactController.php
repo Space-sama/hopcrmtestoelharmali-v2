@@ -250,20 +250,27 @@ class ContactController extends Controller
             'service.min' => 'Le champ Service doit avoir quatre caractères au minimum !',
         ],
     );
+
         $data = $request->all();
+        $id = $contact;
+        // dd($id);
+
         $contact = Contact::find($contact);
-        $contact->nom = $data['nom'];
-        $contact->prenom = $data['prenom'];
-        $contact->email = $data['email'];
-        $contact->telephone_fixe = $data['telephone_fixe'];
-        $contact->fonction = $data['fonction'];
-        $contact->service = $data['service'];
-        // $contact->organisation_id = $data['organisation_id'];
-        if(!$contact){
-            return back()->with('not_updated', 'Un problème est survenu lors du traitement, merci de ressayez !');
-        }else{
+        $if_exist_ = Contact::where('nom', $data['nom'])
+        ->where('prenom', $data['prenom'])->where('id', '!=', $id)->first();
+        if(!$if_exist_ && $contact){
+            $contact->nom = $data['nom'];
+            $contact->prenom = $data['prenom'];
+            $contact->email = $data['email'];
+            $contact->telephone_fixe = $data['telephone_fixe'];
+            $contact->fonction = $data['fonction'];
+            $contact->service = $data['service'];
             $contact->save();
+            Session::forget('correction');
             return redirect('/')->with('updated', 'Le contact à été bien modifié');
+        }else{
+            Session::put('correction', 'Le nom / prénom du contact déjà existe !');
+            return redirect('/edit_contact/'.$id)->with('failed_on_edit_contact', 'Le nom / prénom du contact déjà existe !');
         }
     }
 

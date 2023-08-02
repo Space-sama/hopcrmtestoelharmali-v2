@@ -119,6 +119,17 @@
         });
     @endif
 
+    // Double of contact in edition
+    @if(Session::has('failed_on_edit_contact'))
+        Swal.fire({
+            title: 'Doublon !',
+            html: '<h5>Le Nom ou le Prénom du contact déjà existe !</h5>',
+            showDenyButton: false,
+            showCancelButton: false,
+            showConfirmButton: true,
+        });
+    @endif
+
     @if($errors->any())
         @foreach($errors->all() as $err)
             Swal.fire({

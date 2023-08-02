@@ -5,6 +5,7 @@
 
 <div class="container myContainer">
 <center><h4 class="mb-5">Modifier le contact</h4></center>
+<center><h6 class="mt-3 correction">{{ Session::get('correction') }}</h6></center>
 <form action="{{ url('/edit_contact_action/'.$contactToEdit->id) }}" method="post" data-parsley-validate id="form">
 
     {{ csrf_field() }}
