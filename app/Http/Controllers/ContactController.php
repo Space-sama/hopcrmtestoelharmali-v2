@@ -253,8 +253,6 @@ class ContactController extends Controller
 
         $data = $request->all();
         $id = $contact;
-        // dd($id);
-
         $contact = Contact::find($contact);
         $if_exist_ = Contact::where('nom', $data['nom'])
         ->where('prenom', $data['prenom'])->where('id', '!=', $id)->first();
