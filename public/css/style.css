@@ -1,0 +1,26 @@
+
+.myContainer {
+    margin-top: 80px;
+    margin-bottom: 60px;
+    padding: 40px;
+    background-color: rgb(250, 249, 249);
+    border-radius: 1%;
+}
+
+.myContainerr {
+    margin-top: 80px;
+    margin-bottom: 60px;
+}
+
+#edit {
+    outline: none; text-decoration: none
+}
+
+.btn-modif, .btn-delete{
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.correction {
+    color: rgb(233, 162, 55);
+}
