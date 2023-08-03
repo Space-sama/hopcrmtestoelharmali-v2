@@ -220,7 +220,7 @@ class ContactController extends Controller
     }
 
     // Update a contact
-    public function editOneContactAction(Request $request, $contact) {
+    public function editOneContactAction(Request $request, $contact, $org) {
         $request->validate([
             'nom' => 'required|min:4',
             'prenom' => 'required|min:4',
@@ -252,20 +252,42 @@ class ContactController extends Controller
     );
 
         $data = $request->all();
+        $idOrg = $org;
+        // dd($idOrg);
         $id = $contact;
         $contact = Contact::find($contact);
-        $if_exist_ = Contact::where('nom', $data['nom'])
+        $organisation = Organisation::find($org);
+
+        $if_exist_contact = Contact::where('nom', $data['nom'])
         ->where('prenom', $data['prenom'])->where('id', '!=', $id)->first();
-        if(!$if_exist_ && $contact){
-            $contact->nom = $data['nom'];
-            $contact->prenom = $data['prenom'];
-            $contact->email = $data['email'];
-            $contact->telephone_fixe = $data['telephone_fixe'];
-            $contact->fonction = $data['fonction'];
-            $contact->service = $data['service'];
-            $contact->save();
-            Session::forget('correction');
-            return redirect('/')->with('updated', 'Le contact à été bien modifié');
+
+        $if_exist_org = Organisation::where('nom', $data['org_name'])
+        ->where('id', '!=', $idOrg)->first();
+        // dd($if_exist_org);
+
+        if(!$if_exist_contact && $contact){
+
+            if(!$if_exist_org && $organisation){
+                $contact->nom = $data['nom'];
+                $contact->prenom = $data['prenom'];
+                $contact->email = $data['email'];
+                $contact->telephone_fixe = $data['telephone_fixe'];
+                $contact->fonction = $data['fonction'];
+                $contact->service = $data['service'];
+                $organisation->nom = $data['org_name'];
+                $organisation->statut = $data['statut'];
+                $organisation->adresse = $data['adresse'];
+                $organisation->code_postal = $data['code_postal'];
+                $organisation->ville = $data['ville'];
+                $contact->save();
+                $organisation->save();
+                Session::forget('correction');
+                return redirect('/')->with('updated', 'Le contact à été bien modifié');
+            }else{
+                Session::put('correction', 'Une entreprise existe déjà avec ce nom !');
+                return redirect('/edit_contact/'.$id)->with('failed_on_edit_org', 'Une entreprise existe déjà avec ce nom !');
+            }
+
         }else{
             Session::put('correction', 'Le nom / prénom du contact déjà existe !');
             return redirect('/edit_contact/'.$id)->with('failed_on_edit_contact', 'Le nom / prénom du contact déjà existe !');

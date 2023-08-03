@@ -130,6 +130,17 @@
         });
     @endif
 
+    // Double of organisation in edition
+    @if(Session::has('failed_on_edit_org'))
+        Swal.fire({
+            title: 'Doublon !',
+            html: '<h5>Une entreprise déjà existe avec ce nom !</h5>',
+            showDenyButton: false,
+            showCancelButton: false,
+            showConfirmButton: true,
+        });
+    @endif
+
     @if($errors->any())
         @foreach($errors->all() as $err)
             Swal.fire({

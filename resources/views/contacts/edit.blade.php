@@ -6,7 +6,7 @@
 <div class="container myContainer">
 <center><h4 class="mb-5">Modifier le contact</h4></center>
 <center><h6 class="mt-3 correction">{{ Session::get('correction') }}</h6></center>
-<form action="{{ url('/edit_contact_action/'.$contactToEdit->id) }}" method="post" data-parsley-validate id="form">
+<form action="{{ url('/edit_contact_action/'.$contactToEdit->id.'/'.$contactToEdit->organisation->id) }}" method="post" data-parsley-validate id="form">
 
     {{ csrf_field() }}
     {{ method_field('PUT') }}
@@ -57,9 +57,37 @@
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
-          <label for="organisation_id">Entreprise</label>
-          <input name="organisation_id" type="text" id="organisation_id" class="form-control" value="{{$contactToEdit->organisation->nom}}" disabled required />
-
+                <label for="org_name">Entreprise</label>
+                <input name="org_name" type="text" id="org_name" class="form-control" value="{{old('org_name') ?? $contactToEdit->organisation->nom}}" required />
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="statut">Statut</label>
+                <select name="statut" class="custom-select" id="statut">
+                <option value="{{ old('statut') ??$contactToEdit->organisation->statut}}" selected>{{$contactToEdit->organisation->statut}}</option>
+                  <option value="PROSPECT">PROSPECT</option>
+                  <option value="CLIENT">CLIENT</option>
+                  <option value="LEAD">LEAD</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="adresse">Adresse</label>
+                <textarea name="adresse" class="form-control" id="adresse" rows="3" placeholder="{{old('adresse') ?? $contactToEdit->organisation->adresse}}" required >{{old('adresse') ?? $contactToEdit->organisation->adresse}}</textarea>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="code_postal">Code Postal</label>
+                <input name="code_postal" type="text" class="form-control" id="code_postal" value="{{ $contactToEdit->organisation->code_postal ??  old('code_postal') }}" placeholder="Code postal ?" />
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="ville">Ville</label>
+                <input name="ville" type="text" class="form-control" id="ville" value="{{ $contactToEdit->organisation->ville  ?? old('ville') }}" placeholder="La ville ?" />
             </div>
         </div>
     </div>
