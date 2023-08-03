@@ -19,6 +19,7 @@ class ContactController extends Controller
 
     // get Contact creation page
     public function createOneContact() {
+        Session::forget('correction');
         $orgs = Organisation::all();
         return view('contacts.create', compact('orgs'));
     }
