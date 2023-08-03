@@ -228,6 +228,11 @@ class ContactController extends Controller
             'telephone_fixe' => 'required|regex:/[0-9]{9}/',
             'fonction' => 'required|min:4',
             'service' => 'required|min:4',
+            'org_name' => 'required|min:4',
+            'adresse' => 'required|min:10',
+            'code_postal' => 'required|numeric',
+            'ville' => 'required|min:4',
+
 
         ],
         [
@@ -248,6 +253,18 @@ class ContactController extends Controller
 
             'service.required' => 'Le champ Service est obligatoire !',
             'service.min' => 'Le champ Service doit avoir quatre caractères au minimum !',
+
+            'ville.required' => 'Le champ Ville est obligatoire !',
+            'ville.min' => 'Le champ Ville doit avoir quatre caractères au minimum !',
+
+            'code_postal.required' => 'Le champ Code Postal est obligatoire !',
+            'code_postal.numeric' => 'Le champ Code Postal doit être au format numérique !',
+
+            'adresse.required' => 'Le champ Adresse est obligatoire !',
+            'adresse.min' => 'Le champ Adresse doit avoir 10 caractères au minimum !',
+
+            'org_name.required' => 'Le champ Entreprise est obligatoire !',
+            'org_name.min' => 'Le champ Entreprise doit avoir quatre caractères au minimum !',
         ],
     );
 
